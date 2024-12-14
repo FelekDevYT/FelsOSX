@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <!--<RuntimeIdentifier>cosmos</RuntimeIdentifier>-->
+        <Platform>cosmos</Platform>
+        <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
+        <SelfContained>True</SelfContained>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <EnableGDB>False</EnableGDB>
+        <StartCosmosGDB>False</StartCosmosGDB>
+        <VisualStudioDebugPort>Pipe: Cosmos\Serial</VisualStudioDebugPort>
+        <CosmosDebugPort>Serial: COM1</CosmosDebugPort>
+        <Launch>VMware</Launch>
+        <Profile>VMware</Profile>
+        <Description>Use VMware Player or Workstation to deploy and debug.</Description>
+        <PxeInterface>192.168.0.8</PxeInterface>
+        <DebugEnabled>False</DebugEnabled>
+        <QemuVideoDriver>VGA</QemuVideoDriver>
+        <QemuMemory>512</QemuMemory>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="fonts\1.F14" />
+      <None Remove="fonts\10.F08" />
+      <None Remove="fonts\11.F16" />
+      <None Remove="fonts\12.F08" />
+      <None Remove="fonts\13.F16" />
+      <None Remove="fonts\14.F32" />
+      <None Remove="fonts\15.F08" />
+      <None Remove="fonts\16.F16" />
+      <None Remove="fonts\2.F12" />
+      <None Remove="fonts\3.F16" />
+      <None Remove="fonts\4.F20" />
+      <None Remove="fonts\5.F12" />
+      <None Remove="fonts\6.F16" />
+      <None Remove="fonts\7.F19" />
+      <None Remove="fonts\8.F16" />
+      <None Remove="fonts\9.F14" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="fonts\1.F14" />
+      <EmbeddedResource Include="fonts\10.F08" />
+      <EmbeddedResource Include="fonts\11.F16" />
+      <EmbeddedResource Include="fonts\12.F08" />
+      <EmbeddedResource Include="fonts\13.F16" />
+      <EmbeddedResource Include="fonts\14.F32" />
+      <EmbeddedResource Include="fonts\15.F08" />
+      <EmbeddedResource Include="fonts\16.F16" />
+      <EmbeddedResource Include="fonts\2.F12" />
+      <EmbeddedResource Include="fonts\3.F16" />
+      <EmbeddedResource Include="fonts\4.F20" />
+      <EmbeddedResource Include="fonts\5.F12" />
+      <EmbeddedResource Include="fonts\6.F16" />
+      <EmbeddedResource Include="fonts\7.F19" />
+      <EmbeddedResource Include="fonts\8.F16" />
+      <EmbeddedResource Include="fonts\9.F14" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="Cosmos.Plugs" Version="0-*" NoWarn="NU1604" />
+        <PackageReference Include="CosmosHttp" Version="1.0.4" />
+    </ItemGroup>
+
+</Project>
