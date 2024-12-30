@@ -68,4 +68,8 @@
         <PackageReference Include="CosmosHttp" Version="1.0.4" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="System\FileSystem\" />
+    </ItemGroup>
+
 </Project>

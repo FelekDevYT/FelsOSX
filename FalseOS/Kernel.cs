@@ -9,6 +9,7 @@ using Cosmos.System.Graphics.Fonts;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 using System.IO;
+using FalseOS.System.install;
 
 namespace FalseOS
 {
@@ -30,6 +31,15 @@ namespace FalseOS
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Booting FelsOS " + ver);
             Console.ForegroundColor= ConsoleColor.White;
+
+            if (!Directory.Exists(@"0:\FelsOS\"))
+            {
+                Install.install();
+            }
+            else
+            {
+                Install.login();
+            }
 
             try
             {
