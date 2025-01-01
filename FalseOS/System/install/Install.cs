@@ -19,6 +19,7 @@ namespace FalseOS.System.install
                 var pass = WriteMessage.nonWritingReadLine();
 
                 if (name == "REINSTALL_OS") install();
+                if(name == "SAFE") return;
 
                 if (File.Exists(@"0:\FelsOS\users\" + name + ".user"))
                 {

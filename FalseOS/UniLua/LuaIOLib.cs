@@ -22,47 +22,53 @@ namespace UniLua
 				new NameFuncPair("writeLine", IO_WriteLine),
 				new NameFuncPair("writeToFile", IO_WriteTextToFile),
 				new NameFuncPair("readFromFile", IO_ReadTextFromFile),
-				new NameFuncPair("get", get)
+				new NameFuncPair("createFile", IO_CreateFile),
+				new NameFuncPair("createDirectory", IO_CreateDir)
             };
 
 			lua.L_NewLib( define );
 			return 1;
-		}//
+		}
 
-		private static int get(ILuaState lua)
+		private static int IO_CreateDir(ILuaState lua)
 		{
-			lua.PushNumber(10);
-			return 0;
+			Directory.CreateDirectory(lua.L_CheckString(1));
+			return 1;
+		}
+
+		private static int IO_CreateFile(ILuaState lua)
+		{
+			File.Create(lua.L_CheckString(1));
+			return 1;
 		}
 
 		private static int IO_ReadTextFromFile(ILuaState lua)
 		{
 			lua.PushString(File.ReadAllText(lua.L_CheckString(1)));
-			return 0;
+			return 1;
 		}
 
 		private static int IO_WriteTextToFile(ILuaState lua)
 		{
 			File.WriteAllText(lua.L_CheckString(1),lua.L_CheckString(2));
-			return 0;
+			return 1;
 		}
 
 		private static int IO_Write( ILuaState lua)
 		{
 			Console.Write(lua.L_CheckString(1));
-			return 0;
+			return 1;
 		}
 
         private static int IO_WriteLine(ILuaState lua)
         {
             Console.WriteLine(lua.L_CheckString(1));
-            return 0;
+            return 1;
         }
         private static int IO_Input( ILuaState lua )
 		{
-			string line = Console.ReadLine();
-			lua.PushString(line);
-			return 0;
+			lua.PushString(Console.ReadLine());
+			return 1;
 		}
 	}
 

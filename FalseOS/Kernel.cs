@@ -81,5 +81,10 @@ namespace FalseOS
                 WriteMessage.writeCriticalErrorScreen(ex);
             }
         }
+
+        protected override void AfterRun()
+        {
+            WriteMessage.writeInfo("Shutting down os...");
+        }
     }
 }

@@ -1,4 +1,7 @@
  
+using System;
+using FalseOS;
+
 namespace UniLua
 {
 	using System.Diagnostics;
@@ -11,22 +14,71 @@ namespace UniLua
 		{
 			NameFuncPair[] define = new NameFuncPair[]
 			{
-#if !UNITY_WEBPLAYER
-				new NameFuncPair("clock", 	OS_Clock),
-#endif
+				new NameFuncPair("getTime",OS_GetTime),
+				new NameFuncPair("getVersion",OS_GetVersion),
+				new NameFuncPair("getPath",OS_GetPath)
 			};
 
 			lua.L_NewLib( define );
 			return 1;
 		}
 
-#if !UNITY_WEBPLAYER
-		private static int OS_Clock( ILuaState lua )
+		private static int OS_GetPath(ILuaState lua)
 		{
-			lua.PushNumber(0); //TO PLUG
+			lua.PushString(Kernel.Path);
 			return 1;
 		}
-#endif
+		
+		private static int OS_GetVersion(ILuaState lua)
+		{
+			lua.PushString(Kernel.ver);
+			return 1;
+		}
+		
+		private static int OS_GetTime(ILuaState lua)
+		{
+			try
+			{
+				switch (lua.L_CheckString(1))
+				{
+					case "DAY":
+						lua.PushString(DateTime.Now.Day.ToString());
+						return 1;
+					case "DAYOFWEEK":
+						lua.PushString(DateTime.Now.DayOfWeek.ToString());
+						return 1;
+					case "DATE":
+						lua.PushString(DateTime.Now.Date.ToString());
+						return 1;
+					case "HOUR":
+						lua.PushString(DateTime.Now.Hour.ToString());
+						return 1;
+					case "KIND":
+						lua.PushString(DateTime.Now.Kind.ToString());
+						return 1;
+					case "SECOND":
+						lua.PushString(DateTime.Now.Second.ToString());
+						return 1;
+					case "MILLISECOND":
+						lua.PushString(DateTime.Now.Millisecond.ToString());
+						return 1;
+					case "YEAR":
+						lua.PushString(DateTime.Now.Year.ToString());
+						return 1;
+					case "MONTH":
+						lua.PushString(DateTime.Now.Month.ToString());
+						return 1;
+					case "MINUTE":
+						lua.PushString(DateTime.Now.Minute.ToString());
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				lua.PushString(DateTime.Now.ToString());
+			}
+			return 1;
+		}
 	}
 }
 
