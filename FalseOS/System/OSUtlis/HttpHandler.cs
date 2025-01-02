@@ -39,9 +39,9 @@ namespace FalseOS.System.OSUtlis
             return url[start..end];
         }
 
-        public static byte[] downloadFile(String url)
+        public static string downloadFile(String url)
         {
-            if (url.StartsWith("http"))
+            if (url.StartsWith("https"))
             {
                 WriteMessage.writeError("HTTPS protocol not supported yet!");
                 return "";
@@ -63,7 +63,7 @@ namespace FalseOS.System.OSUtlis
             rq.Method = "GET";
             rq.Send();
 
-            return rq.Response.GetStream();
+            return rq.Response.Content;
         }
     }
 }

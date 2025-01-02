@@ -14,6 +14,7 @@ using Cosmos.System.Network.Config;
 using Cosmos.System.Network.IPv4.UDP.DNS;
 using Cosmos.System.Network.IPv4;
 using CosmosHttp.Client;
+using FalseOS.System.OSUtlis;
 
 namespace FalseOS.System;
 
@@ -309,6 +310,21 @@ public class ConsoleCommands
                     break;
                 case "setsize":
                     Console.SetWindowSize(80, 25);
+                    break;
+                case "wget":
+                    string url = words[1];
+
+                    try
+                    {
+                        string file = HttpHandler.downloadFile(url);
+                        File.WriteAllText(Kernel.Path + "file", file);
+                        WriteMessage.writeOk("URL contains saved to file");
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteMessage.writeError(ex.ToString());
+                    }
+
                     break;
                 default:
                     if (command.StartsWith("./"))
