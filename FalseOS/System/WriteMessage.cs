@@ -62,4 +62,20 @@ public class WriteMessage
         Console.ReadKey();
         Cosmos.System.Power.Reboot();
     }
+
+    public static String nonWritingReadLine()
+    {
+        String readLine = "";
+        while (true)
+        {
+            ConsoleKeyInfo key = Console.ReadKey(true);
+            if (key.Key == ConsoleKey.Enter)
+            {
+                break;
+            }
+            readLine += key.KeyChar.ToString();
+        }
+        Console.WriteLine();
+        return readLine;
+    }
 }

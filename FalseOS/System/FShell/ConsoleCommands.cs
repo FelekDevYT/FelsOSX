@@ -10,6 +10,10 @@ using System.Threading;
 using UniLua;
 using FalseOS.System.Font;
 using System.Reflection.PortableExecutable;
+using Cosmos.System.Network.Config;
+using Cosmos.System.Network.IPv4.UDP.DNS;
+using Cosmos.System.Network.IPv4;
+using CosmosHttp.Client;
 
 namespace FalseOS.System;
 
@@ -34,19 +38,6 @@ public class ConsoleCommands
                 case "free":
                     long free = Kernel.fs.GetAvailableFreeSpace(Kernel.Path);
                     Console.WriteLine("Free space: " + free / 1024 + "KB");
-                    break;
-                case "format":
-                    if (Kernel.fs.Disks[0].Partitions.Count > 0)
-                    {
-                        Kernel.fs.Disks[0].DeletePartition(0);
-                    }
-                    Kernel.fs.Disks[0].Clear();
-                    Kernel.fs.Disks[0].CreatePartition((int)(Kernel.fs.Disks[0].Size / (1024 * 1024)));
-                    Kernel.fs.Disks[0].FormatPartition(0, "FAT32", true);
-                    WriteMessage.writeOk("Success format!");
-                    WriteMessage.writeWarning("FelsOS will be reboot in 3 seconds...");
-                    Thread.Sleep(3000);
-                    Cosmos.System.Power.Reboot();
                     break;
                 case "ls":
                     var Dirs = Directory.GetDirectories(Kernel.Path);
@@ -111,25 +102,25 @@ public class ConsoleCommands
                         WriteMessage.writeError("Indalid syntax");
                     }
                     break;
-                case "dl":
-                    if (words.Length > 1)
+                case "rm":
+                    String FULL_PATH = Kernel.Path + words[1];
+                    if (File.Exists(FULL_PATH)) File.Delete(FULL_PATH);
+                    else if (Directory.Exists(FULL_PATH))
                     {
-                        String path = words[1];
-                        if (!path.Contains(@"\"))
-                            path = Kernel.Path + path;
-                        if (path.EndsWith(' '))
+                        try
                         {
-                            path = path.Substring(0, path.Length - 1);
+                            if (words[2] == "-r")
+                            {
+                                Directory.Delete(FULL_PATH, true);
+                                break;
+                            }
                         }
-                        if (File.Exists(path))
-                        {
-                            File.Delete(path);
-                            WriteMessage.writeOk("Deleted " + path + "!");
-                        }
+                        catch (Exception ex) { }
+                        Directory.Delete(FULL_PATH,false);
                     }
                     else
                     {
-                        WriteMessage.writeError("Indalid syntax");
+                        WriteMessage.writeError("Not found file or directory!");
                     }
                     break;
                 case "mkdir":
@@ -201,7 +192,7 @@ public class ConsoleCommands
                     break;
                 case "lua":
                     try
-                    { 
+                    {
                         var lua = LuaAPI.NewState();
                         lua.L_OpenLibs();
                         lua.L_DoString(File.ReadAllText(Kernel.Path + words[1]));
@@ -228,17 +219,18 @@ public class ConsoleCommands
                     break;
                 case "calc":
                     String expression = "";
-                    for (int i = 1;i < words.Length; i++)
+                    for (int i = 1; i < words.Length; i++)
                     {
                         expression += words[i];
                     }
                     var luaAPI = LuaAPI.NewState();
                     luaAPI.L_OpenLibs();
-                    luaAPI.L_DoString("print("+expression+")");
+                    luaAPI.L_DoString("print(" + expression + ")");
                     break;
                 case "luadebugger":
                     //debug your code
-                    while(true){
+                    while (true)
+                    {
                         Console.Write("LUA debugger$ ");
                         var state = Console.ReadLine();
                         if (state == "$%")
@@ -265,12 +257,73 @@ public class ConsoleCommands
                         Cosmos.Core.GCImplementation.GetUsedRAM());
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
-            }
+                case "cputest":
+                    ulong cpuUptime = Cosmos.Core.CPU.GetCPUUptime();
+                    WriteMessage.writeInfo("Starting tests");
+                    Thread.Sleep(1000);
+                    ulong afterCpuUptime = Cosmos.Core.CPU.GetCPUUptime();
+                    WriteMessage.writeOk("Ending CPUUptime tests");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine((double)(afterCpuUptime - cpuUptime) / 1000000000);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                case "diskmanager":
+                    switch (words[1])
+                    {
+                        case "--list":
+                        case "-l":
+                            if (Kernel.fs.Disks.Count == 0)
+                            {
+                                WriteMessage.writeError("No disks found!");
+                            }
+                            for (int disk = 0; disk < Kernel.fs.Disks.Count; disk++)
+                            {
+                                Console.Write($"Disk {disk}");
+                                Console.Write(new string(' ', 20 - $"Disk {disk}".Length));
+                                Console.Write($"Size: {Kernel.fs.Disks[disk].Size / (1024 * 1024)}MiB");
+                                Console.Write(new string(' ', 20 - $"Size: {Kernel.fs.Disks[disk].Size / (1024 * 1024)} MiB".Length));
+                                Console.Write($"Partitions: {Kernel.fs.Disks[disk].Partitions.Count}");
+                                Console.Write(new string(' ', 20 - $"Partitions: {Kernel.fs.Disks[disk].Partitions.Count}".Length));
 
-            if (command.StartsWith("./"))
-            {
-                var a = command.Substring(2);
-                RunCommand(File.ReadAllText(Kernel.Path+a));
+                                if (Kernel.fs.Disks[disk].IsMBR)
+                                    Console.Write($"MBR");
+                                else
+                                    Console.Write($"GPT");
+                                Console.WriteLine();
+                            }
+                            break;
+                    }
+                    break;
+                case "format":
+                    if (Kernel.fs.Disks[0].Partitions.Count > 0)
+                    {
+                        Kernel.fs.Disks[0].DeletePartition(0);
+                    }
+                    Kernel.fs.Disks[0].Clear();
+                    Kernel.fs.Disks[0].CreatePartition((int)(Kernel.fs.Disks[0].Size / (1024 * 1024)));
+                    Kernel.fs.Disks[0].FormatPartition(0, "FAT32", true);
+                    WriteMessage.writeOk("Success format!");
+                    WriteMessage.writeWarning("FelsOS will be reboot in 3 seconds...");
+                    Thread.Sleep(3000);
+                    Cosmos.System.Power.Reboot();
+                    break;
+                case "install":
+                    install.Install.install();
+                    break;
+                case "setsize":
+                    Console.SetWindowSize(80,25);
+                    break;
+                default:
+                    if (command.StartsWith("./"))
+                    {
+                        var a = command.Substring(2);
+                        RunCommand(File.ReadAllText(Kernel.Path + a));
+                    }
+                    else
+                    {
+                        WriteMessage.writeError("Not found command or FSHELL handle applet!");
+                    }   
+                    break;
             }
         }
     }

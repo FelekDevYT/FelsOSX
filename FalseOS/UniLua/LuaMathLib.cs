@@ -5,8 +5,9 @@ namespace UniLua
 	using Double = System.Double;
 	using Random = System.Random;
 	using BitConverter = System.BitConverter;
+    using System;
 
-	internal class LuaMathLib
+    internal class LuaMathLib
 	{
 		public const string LIB_NAME = "math";
 

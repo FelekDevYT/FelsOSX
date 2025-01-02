@@ -9,6 +9,9 @@ using Cosmos.System.Graphics.Fonts;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 using System.IO;
+using System.Threading;
+using FalseOS.System.install;
+using FalseOS.System.Protection;
 
 namespace FalseOS
 {
@@ -17,6 +20,7 @@ namespace FalseOS
         public static String ver = "0.0.0";
         public static String Path = @"0:\";
         public static CosmosVFS fs;
+        public static OSRootProtection perms = new OSRootProtection(false,false,false);
 
         protected override void BeforeRun()
         {
@@ -30,7 +34,7 @@ namespace FalseOS
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Booting FelsOS " + ver);
             Console.ForegroundColor= ConsoleColor.White;
-
+            
             try
             {
                 if (File.Exists(@"0:\startup"))
@@ -70,6 +74,12 @@ namespace FalseOS
             {
                 WriteMessage.writeCriticalErrorScreen(ex);
             }
+        }
+
+        protected override void AfterRun()
+        {
+            Thread.Sleep(500);
+            WriteMessage.writeInfo("Shutting down os...");
         }
     }
 }
