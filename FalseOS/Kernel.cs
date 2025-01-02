@@ -9,9 +9,13 @@ using Cosmos.System.Graphics.Fonts;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 using System.IO;
+<<<<<<< HEAD
 using System.Threading;
 using FalseOS.System.install;
 using FalseOS.System.Protection;
+=======
+using FalseOS.System.install;
+>>>>>>> 109e0f0be15fceab36d1c9b1ce5c549a00486f44
 
 namespace FalseOS
 {
@@ -34,29 +38,6 @@ namespace FalseOS
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Booting FelsOS " + ver);
             Console.ForegroundColor= ConsoleColor.White;
-            
-            try
-            {
-                if (File.Exists(@"0:\startup"))
-                {
-                    WriteMessage.writeOk("Find startup file!");
-                    String[] lines = File.ReadAllLines(@"0:\startup");
-                    WriteMessage.writeOk("Successfully readding startup!");
-                    foreach (String line in lines)
-                    {
-                        ConsoleCommands.RunCommand(line);
-                    }
-                    WriteMessage.writeOk("startup executed!");
-                }
-                else
-                {
-                    WriteMessage.writeInfo("Not found startup file, running default FelsOS");
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteMessage.writeCriticalErrorScreen(ex);
-            }
 
             WriteMessage.writeInfo("End of booting FelsOS");
         }
@@ -78,7 +59,10 @@ namespace FalseOS
 
         protected override void AfterRun()
         {
+<<<<<<< HEAD
             Thread.Sleep(500);
+=======
+>>>>>>> 109e0f0be15fceab36d1c9b1ce5c549a00486f44
             WriteMessage.writeInfo("Shutting down os...");
         }
     }

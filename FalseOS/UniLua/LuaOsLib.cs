@@ -16,15 +16,20 @@ namespace UniLua
 			{
 				new NameFuncPair("getTime",OS_GetTime),
 				new NameFuncPair("getVersion",OS_GetVersion),
+<<<<<<< HEAD
 				new NameFuncPair("getPath",OS_GetPath),
 				new NameFuncPair("reboot",OS_Reboot),
 				new NameFuncPair("shutdown",OS_Shutdown)
+=======
+				new NameFuncPair("getPath",OS_GetPath)
+>>>>>>> 109e0f0be15fceab36d1c9b1ce5c549a00486f44
 			};
 
 			lua.L_NewLib( define );
 			return 1;
 		}
 
+<<<<<<< HEAD
 		private static int OS_Reboot(ILuaState lua)
 		{
 			Cosmos.System.Power.Reboot();
@@ -39,6 +44,10 @@ namespace UniLua
 
 		private static int OS_GetPath(ILuaState lua)
 		{
+=======
+		private static int OS_GetPath(ILuaState lua)
+		{
+>>>>>>> 109e0f0be15fceab36d1c9b1ce5c549a00486f44
 			lua.PushString(Kernel.Path);
 			return 1;
 		}
