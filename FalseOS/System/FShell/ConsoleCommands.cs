@@ -116,7 +116,7 @@ public class ConsoleCommands
                             }
                         }
                         catch (Exception ex) { }
-                        Directory.Delete(FULL_PATH,false);
+                        Directory.Delete(FULL_PATH, false);
                     }
                     else
                     {
@@ -284,7 +284,6 @@ public class ConsoleCommands
                                 Console.Write(new string(' ', 20 - $"Size: {Kernel.fs.Disks[disk].Size / (1024 * 1024)} MiB".Length));
                                 Console.Write($"Partitions: {Kernel.fs.Disks[disk].Partitions.Count}");
                                 Console.Write(new string(' ', 20 - $"Partitions: {Kernel.fs.Disks[disk].Partitions.Count}".Length));
-<<<<<<< HEAD:FalseOS/System/FShell/ConsoleCommands.cs
 
                                 if (Kernel.fs.Disks[disk].IsMBR)
                                     Console.Write($"MBR");
@@ -308,11 +307,8 @@ public class ConsoleCommands
                     Thread.Sleep(3000);
                     Cosmos.System.Power.Reboot();
                     break;
-                case "install":
-                    install.Install.install();
-                    break;
                 case "setsize":
-                    Console.SetWindowSize(80,25);
+                    Console.SetWindowSize(80, 25);
                     break;
                 default:
                     if (command.StartsWith("./"))
@@ -323,45 +319,8 @@ public class ConsoleCommands
                     else
                     {
                         WriteMessage.writeError("Not found command or FSHELL handle applet!");
-                    }   
-                    break;
-=======
-
-                                if (Kernel.fs.Disks[disk].IsMBR)
-                                    Console.Write($"MBR");
-                                else
-                                    Console.Write($"GPT");
-                                Console.WriteLine();
-                            }
-                            break;
                     }
                     break;
-                case "format":
-                    if (Kernel.fs.Disks[0].Partitions.Count > 0)
-                    {
-                        Kernel.fs.Disks[0].DeletePartition(0);
-                    }
-                    Kernel.fs.Disks[0].Clear();
-                    Kernel.fs.Disks[0].CreatePartition((int)(Kernel.fs.Disks[0].Size / (1024 * 1024)));
-                    Kernel.fs.Disks[0].FormatPartition(0, "FAT32", true);
-                    WriteMessage.writeOk("Success format!");
-                    WriteMessage.writeWarning("FelsOS will be reboot in 3 seconds...");
-                    Thread.Sleep(3000);
-                    Cosmos.System.Power.Reboot();
-                    break;
-                case "install":
-                    install.Install.install();
-                    break;
-                case "setsize":
-                    Console.SetWindowSize(80,25);
-                    break;
-            }
-
-            if (command.StartsWith("./"))
-            {
-                var a = command.Substring(2);
-                RunCommand(File.ReadAllText(Kernel.Path + a));
->>>>>>> 109e0f0be15fceab36d1c9b1ce5c549a00486f44:FalseOS/System/ConsoleCommands.cs
             }
         }
     }

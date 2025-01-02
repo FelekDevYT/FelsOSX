@@ -9,13 +9,7 @@ using Cosmos.System.Graphics.Fonts;
 using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 using System.IO;
-<<<<<<< HEAD
 using System.Threading;
-using FalseOS.System.install;
-using FalseOS.System.Protection;
-=======
-using FalseOS.System.install;
->>>>>>> 109e0f0be15fceab36d1c9b1ce5c549a00486f44
 
 namespace FalseOS
 {
@@ -24,7 +18,6 @@ namespace FalseOS
         public static String ver = "0.0.0";
         public static String Path = @"0:\";
         public static CosmosVFS fs;
-        public static OSRootProtection perms = new OSRootProtection(false,false,false);
 
         protected override void BeforeRun()
         {
@@ -59,10 +52,7 @@ namespace FalseOS
 
         protected override void AfterRun()
         {
-<<<<<<< HEAD
             Thread.Sleep(500);
-=======
->>>>>>> 109e0f0be15fceab36d1c9b1ce5c549a00486f44
             WriteMessage.writeInfo("Shutting down os...");
         }
     }
