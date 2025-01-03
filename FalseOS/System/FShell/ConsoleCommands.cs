@@ -22,6 +22,7 @@ public class ConsoleCommands
 {
     public static void RunCommand(String command)
     {
+        command = command.Trim();
         String[] words = command.Split(' ');
         if (words.Length > 0)
         {
