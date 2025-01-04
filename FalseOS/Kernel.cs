@@ -58,6 +58,7 @@ namespace FalseOS
             {
                 GUIupdate.update(canv);
             }
+            Heap.Collect();
         }
 
         protected override void AfterRun()
