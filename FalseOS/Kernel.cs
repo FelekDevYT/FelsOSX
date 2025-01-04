@@ -10,6 +10,7 @@ using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
 using System.IO;
 using System.Threading;
+using FalseOS.System.GUI;
 
 namespace FalseOS
 {
@@ -18,6 +19,9 @@ namespace FalseOS
         public static String ver = "0.0.0";
         public static String Path = @"0:\";
         public static CosmosVFS fs;
+
+        public static Canvas canv;
+        public static bool GUI = false;
 
         protected override void BeforeRun()
         {
@@ -38,15 +42,21 @@ namespace FalseOS
 
         protected override void Run()
         {
-            try
-            {
-                Console.Write(Path + "> ");
-                var command = Console.ReadLine();
-                ConsoleCommands.RunCommand(command);
+            if(!GUI){
+                try
+                {
+                    Console.Write(Path + "> ");
+                    var command = Console.ReadLine();
+                    ConsoleCommands.RunCommand(command);
+                }
+                catch (Exception ex)
+                {
+                    WriteMessage.writeCriticalErrorScreen(ex);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                WriteMessage.writeCriticalErrorScreen(ex);
+                GUIupdate.update(canv);
             }
         }
 

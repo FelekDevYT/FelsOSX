@@ -28,6 +28,10 @@ public class ConsoleCommands
         {
             switch (words[0])
             {
+                case "gui":
+                    Kernel.canv = FullScreenCanvas.GetFullScreenCanvas(new Mode(1280, 720, ColorDepth.ColorDepth32));
+                    Kernel.GUI = true;
+                    break;
                 case "info":
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                     WriteMessage.writeLogo();
@@ -325,7 +329,6 @@ public class ConsoleCommands
                     {
                         WriteMessage.writeError(ex.ToString());
                     }
-
                     break;
                 default:
                     if (command.StartsWith("./"))
