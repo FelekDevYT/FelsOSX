@@ -28,6 +28,18 @@ public class ConsoleCommands
         {
             switch (words[0])
             {
+                case "vm":
+                    if (Cosmos.System.VMTools.IsVirtualBox)
+                    {
+                        WriteMessage.writeInfo("VirtualMachine is VBox");
+                    }else if (Cosmos.System.VMTools.IsQEMU)
+                    {
+                        WriteMessage.writeInfo("VirtualMachine is QEMU");
+                    }else if (Cosmos.System.VMTools.IsVMWare)
+                    {
+                        WriteMessage.writeInfo("VirtualMachine is VMware");
+                    }
+                    break;
                 case "gui":
                     Kernel.canv = FullScreenCanvas.GetFullScreenCanvas(new Mode(1280, 720, ColorDepth.ColorDepth32));
                     Kernel.GUI = true;
