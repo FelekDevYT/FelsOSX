@@ -23,6 +23,11 @@ namespace FalseOS
         public static Canvas canv;
         public static bool GUI = false;
 
+        protected override void OnBoot()
+        {
+            Sys.Global.Init(GetTextScreen(),false,true,true,true);
+        }
+
         protected override void BeforeRun()
         {
             WriteMessage.writeInfo("Pre-boot successfully!");
