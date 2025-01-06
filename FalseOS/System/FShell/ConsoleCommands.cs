@@ -15,8 +15,28 @@ using Cosmos.System.Network.IPv4.UDP.DNS;
 using Cosmos.System.Network.IPv4;
 using CosmosHttp.Client;
 using FalseOS.System.OSUtlis;
+using System.Numerics;
 
 namespace FalseOS.System;
+
+/*
+Black = 0,
+DarkBlue = 1,
+DarkGreen = 2,
+DarkCyan = 3,
+DarkRed = 4,
+DarkMagenta = 5,
+DarkYellow = 6,
+Gray = 7,
+DarkGray = 8,
+Blue = 9,
+Green = 10,
+Cyan = 11,
+Red = 12,
+Magenta = 13,
+Yellow = 14,
+White = 15
+*/
 
 public class ConsoleCommands
 {
@@ -28,6 +48,10 @@ public class ConsoleCommands
         {
             switch (words[0])
             {
+                case "bg":
+                    Cosmos.System.Global.Console.Background = (ConsoleColor) Int32.Parse(words[1]);
+                    Console.Clear();
+                    break;
                 case "vm":
                     if (Cosmos.System.VMTools.IsVirtualBox)
                     {
@@ -42,6 +66,8 @@ public class ConsoleCommands
                     break;
                 case "gui":
                     Kernel.canv = FullScreenCanvas.GetFullScreenCanvas(new Mode(1280, 720, ColorDepth.ColorDepth32));
+                    Cosmos.System.MouseManager.ScreenWidth = 1280;
+                    Cosmos.System.MouseManager.ScreenHeight = 720;
                     Kernel.GUI = true;
                     break;
                 case "info":

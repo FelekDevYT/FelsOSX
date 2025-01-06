@@ -21,9 +21,24 @@
         <QemuVideoDriver>VGA</QemuVideoDriver>
         <QemuMemory>512</QemuMemory>
         <BinFormat>Elf</BinFormat>
+        <AnalysisLevel>none</AnalysisLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <WarningLevel>3</WarningLevel>
+      <NoWarn />
+      <FileAlignment>512</FileAlignment>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <WarningLevel>3</WarningLevel>
+      <NoWarn />
+      <FileAlignment>512</FileAlignment>
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="assets\logo.bmp" />
+      <None Remove="assets\shutdown.bmp" />
       <None Remove="fonts\1.F14" />
       <None Remove="fonts\10.F08" />
       <None Remove="fonts\11.F16" />
@@ -43,6 +58,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="assets\logo.bmp" />
+      <EmbeddedResource Include="assets\shutdown.bmp" />
       <EmbeddedResource Include="fonts\1.F14" />
       <EmbeddedResource Include="fonts\10.F08" />
       <EmbeddedResource Include="fonts\11.F16" />
