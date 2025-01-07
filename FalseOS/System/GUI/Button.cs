@@ -18,6 +18,7 @@ namespace FalseOS.System.GUI
         private readonly int _height;
         private readonly Color color;
         private readonly Image _image;
+        private readonly String _text;
 
         public Button(Canvas canvas, int x, int y, int width, int height, Color pen)
         {
@@ -37,12 +38,37 @@ namespace FalseOS.System.GUI
             _image = image;
         }
 
+        public Button(Canvas canvas, int x, int y, Color color, String text)
+        {
+            _canvas=canvas;
+            _x = x;
+            _y = y;
+            this.color = color;
+            _text = text;
+            _width = text.Length * 7;
+            _height = 15;
+        }
+
         public bool IsPressed(int mouseX, int mouseY)
         {
-            if (_image != null)
+            if (_text != null)
             {
                 if (mouseX >= _x && mouseX <= _x + _image.Width &&
-                    mouseY >= _y && mouseY <= _y + _image.Height && 
+                    mouseY >= _y && mouseY <= _y + _image.Height &&
+                    MouseManager.MouseState == MouseState.Left)
+                {
+                    _canvas.DrawFilledRectangle(color, _x, _y, _width, _height);
+                    _canvas.DrawString(_text, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Color.Black, _x + 2, _y + 2);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            } else if (_image != null)
+            {
+                if (mouseX >= _x && mouseX <= _x + _image.Width &&
+                    mouseY >= _y && mouseY <= _y + _image.Height &&
                     MouseManager.MouseState == MouseState.Left)
                 {
                     _canvas.DrawImageAlpha(_image, _x, _y);

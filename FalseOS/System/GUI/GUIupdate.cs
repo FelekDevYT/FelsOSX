@@ -16,6 +16,9 @@ namespace FalseOS.System.GUI
         [ManifestResourceStream(ResourceName = "FalseOS.assets.shut.bmp")]
         private static byte[] shutdownIcon;
 
+        [ManifestResourceStream(ResourceName = "FalseOS.assets.reboot.bmp")]
+        private static byte[] rebootIcon;
+
 
         private static bool isMenuOpened = false;
         public static void update(Canvas canv)
@@ -35,13 +38,19 @@ namespace FalseOS.System.GUI
 
         private static void apps(Canvas canv)
         {
-            Button shutdownButton = new Button(canv,10,60,new Bitmap(shutdownIcon));
             if (isMenuOpened)
             {
                 canv.DrawFilledRectangle(Color.LightGoldenrodYellow,0,50,400,600);
 
-                if(shutdownButton.IsPressed((int)MouseManager.X, (int)MouseManager.Y)){
+                Button shutdownButton = new Button(canv, 10, 60, new Bitmap(shutdownIcon));
+                if (shutdownButton.IsPressed((int)MouseManager.X, (int)MouseManager.Y)){
                     Cosmos.System.Power.Shutdown();
+                }
+
+                Button rebootButton = new Button(canv,70,60,new Bitmap(rebootIcon));
+                if(rebootButton.IsPressed((int)MouseManager.X, (int)MouseManager.Y))
+                {
+                    Cosmos.System.Power.Reboot();
                 }
             }
         }

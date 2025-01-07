@@ -38,8 +38,8 @@
 
     <ItemGroup>
       <None Remove="assets\logo.bmp" />
+      <None Remove="assets\reboot.bmp" />
       <None Remove="assets\shut.bmp" />
-      <None Remove="assets\shutdown.bmp" />
       <None Remove="fonts\1.F14" />
       <None Remove="fonts\10.F08" />
       <None Remove="fonts\11.F16" />
@@ -60,8 +60,8 @@
 
     <ItemGroup>
       <EmbeddedResource Include="assets\logo.bmp" />
+      <EmbeddedResource Include="assets\reboot.bmp" />
       <EmbeddedResource Include="assets\shut.bmp" />
-      <EmbeddedResource Include="assets\shutdown.bmp" />
       <EmbeddedResource Include="fonts\1.F14" />
       <EmbeddedResource Include="fonts\10.F08" />
       <EmbeddedResource Include="fonts\11.F16" />
