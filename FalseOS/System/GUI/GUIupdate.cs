@@ -13,7 +13,7 @@ namespace FalseOS.System.GUI
 {
     public class GUIupdate
     {
-        [ManifestResourceStream(ResourceName = "FalseOS.assets.shutdown.bmp")]
+        [ManifestResourceStream(ResourceName = "FalseOS.assets.shut.bmp")]
         private static byte[] shutdownIcon;
 
 
@@ -35,9 +35,14 @@ namespace FalseOS.System.GUI
 
         private static void apps(Canvas canv)
         {
+            Button shutdownButton = new Button(canv,10,60,new Bitmap(shutdownIcon));
             if (isMenuOpened)
             {
                 canv.DrawFilledRectangle(Color.LightGoldenrodYellow,0,50,400,600);
+
+                if(shutdownButton.IsPressed((int)MouseManager.X, (int)MouseManager.Y)){
+                    Cosmos.System.Power.Shutdown();
+                }
             }
         }
 
