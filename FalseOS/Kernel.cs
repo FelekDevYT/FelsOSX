@@ -11,6 +11,7 @@ using IL2CPU.API.Attribs;
 using System.IO;
 using System.Threading;
 using FalseOS.System.GUI;
+using Cosmos.Core.MemoryGroup;
 
 namespace FalseOS
 {
@@ -26,6 +27,7 @@ namespace FalseOS
         protected override void OnBoot()
         {
             Sys.Global.Init(GetTextScreen(),false,true,true,true);
+            Heap.Collect();
         }
 
         protected override void BeforeRun()
@@ -42,6 +44,15 @@ namespace FalseOS
             Console.ForegroundColor= ConsoleColor.White;
 
             WriteMessage.writeInfo("End of booting FelsOS");
+
+            try
+            {
+                 ConsoleCommands.RunCommand(File.ReadAllText(@"0:\startup"));
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
 

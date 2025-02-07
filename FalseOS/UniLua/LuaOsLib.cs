@@ -4,6 +4,7 @@ using FalseOS;
 
 namespace UniLua
 {
+    using FalseOS.System;
     using System.Diagnostics;
 
     internal class LuaOSLib
@@ -18,10 +19,25 @@ namespace UniLua
                 new NameFuncPair("getVersion",OS_GetVersion),
                 new NameFuncPair("getPath",OS_GetPath),
                 new NameFuncPair("reboot",OS_Reboot),
-                new NameFuncPair("shutdown",OS_Shutdown)
+                new NameFuncPair("shutdown",OS_Shutdown),
+                new NameFuncPair("getArg",OS_GetArgs),
+                new NameFuncPair("run", OS_RunCommand)
             };
 
             lua.L_NewLib(define);
+            return 1;
+        }
+
+        private static int OS_RunCommand(ILuaState lua)
+        {
+            ConsoleCommands.RunCommand(lua.L_CheckString(1));
+            return 1;
+        }
+
+        private static int OS_GetArgs(ILuaState lua)
+        {
+            //Console.WriteLine((int)lua.L_CheckNumber(1));
+            lua.PushString(ConsoleCommands.args[(int)lua.L_CheckNumber(1)]);
             return 1;
         }
 

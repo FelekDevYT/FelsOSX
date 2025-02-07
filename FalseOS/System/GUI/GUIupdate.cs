@@ -1,6 +1,6 @@
-﻿using Cosmos.System;
-using Cosmos.System.Graphics;
+﻿using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
+using OpenTerm;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,7 +31,7 @@ namespace FalseOS.System.GUI
             buttons(canv);
             apps(canv);
 
-            canv.DrawChar('#', Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Color.Blue, (int)MouseManager.X, (int)MouseManager.Y);
+            canv.DrawChar('#', Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Color.Blue, (int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y);
 
             canv.Display();
         }
@@ -43,12 +43,12 @@ namespace FalseOS.System.GUI
                 canv.DrawFilledRectangle(Color.LightGoldenrodYellow,0,50,400,600);
 
                 Button shutdownButton = new Button(canv, 10, 60, new Bitmap(shutdownIcon));
-                if (shutdownButton.IsPressed((int)MouseManager.X, (int)MouseManager.Y)){
+                if (shutdownButton.IsPressed((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y)){
                     Cosmos.System.Power.Shutdown();
                 }
 
                 Button rebootButton = new Button(canv,70,60,new Bitmap(rebootIcon));
-                if(rebootButton.IsPressed((int)MouseManager.X, (int)MouseManager.Y))
+                if(rebootButton.IsPressed((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
                 {
                     Cosmos.System.Power.Reboot();
                 }
@@ -63,7 +63,7 @@ namespace FalseOS.System.GUI
 
             Button fels = new Button(canv, 0, 0, new Bitmap(felsButton));
 
-            if(fels.IsPressed((int)MouseManager.X, (int)MouseManager.Y))
+            if(fels.IsPressed((int)Cosmos.System.MouseManager.X, (int)Cosmos.System.MouseManager.Y))
             {
                 isMenuOpened = !isMenuOpened;
                 Thread.Sleep(200);

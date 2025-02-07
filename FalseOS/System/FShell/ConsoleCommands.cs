@@ -40,6 +40,8 @@ White = 15
 
 public class ConsoleCommands
 {
+    public static String[] args;
+
     public static void RunCommand(String command)
     {
         command = command.Trim();
@@ -186,6 +188,9 @@ public class ConsoleCommands
                         WriteMessage.writeError("Indalid syntax");
                     }
                     break;
+                case "":
+                    //PASS
+                    break;
                 case "mkfile":
                     if (words.Length > 1)
                     {
@@ -208,6 +213,10 @@ public class ConsoleCommands
                 case "cd":
                     if (words.Length > 1)
                     {
+                        if (words[1] == "*")
+                        {
+                            Kernel.Path = @"0:\";
+                        }
                         if (words[1] == "..")
                         {
                             String tempPath = Kernel.Path.Substring(0, Kernel.Path.Length - 1);
@@ -237,6 +246,12 @@ public class ConsoleCommands
                 case "lua":
                     try
                     {
+                        int ai = 0;
+                        for (int i = 2; i < words.Length; i++)
+                        {
+                            args[ai] = words[i];
+                            ai++;
+                        }
                         var lua = LuaAPI.NewState();
                         lua.L_OpenLibs();
                         lua.L_DoString(File.ReadAllText(Kernel.Path + words[1]));
@@ -288,6 +303,10 @@ public class ConsoleCommands
                     break;
                 case "set-font":
                     FontManager.parseAndSetFont(words[1]);
+                    break;
+                case "fetch":
+                    Console.WriteLine($"" +
+                        $"\t\t   ##,\r\n\t\t(##/#/((\r\n\t  ,#////(((((/\r\n\t  /*/*//##(*/*,\r\n   ,***/##*,**((( //*\r\n  ,* ,**/,    ,.*/* **,\r\n   *,*(,,,,*/***//*,/,\r\n\t .*,/,.,*((,,,/\r\n\t\t*/,,*/,*\r\n\t\t ,,/*/*\r\n\t\t\t*");
                     break;
                 case "sysinfo":
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -353,6 +372,33 @@ public class ConsoleCommands
                     break;
                 case "setsize":
                     Console.SetWindowSize(80, 25);
+                    break;
+                case "flc"://fcl[0] test.l[1] -o[2] test.app[3]
+                    switch (words[2])
+                    {
+                        case "-o":
+                            String src = File.ReadAllText(Kernel.Path + words[1]);
+                            String esrc = new SimpleCipher(92489945).Encrypt(src);
+                            File.WriteAllText(Kernel.Path + words[3],esrc);
+                            break;
+                        default:
+                            WriteMessage.writeError("Usage: flc --help or fcl -h for get command list!");
+                            break;
+                    }
+                    break;
+                case "run":
+                    try
+                    {
+                        String src = File.ReadAllText(Kernel.Path + words[1]);
+                        String dsrc = new SimpleCipher(92489945).Decrypt(src);
+                        var lua = LuaAPI.NewState();
+                        lua.L_OpenLibs();
+                        lua.L_DoString(dsrc);
+                    }
+                    catch(Exception exc)
+                    {
+                        WriteMessage.writeError(exc.ToString());
+                    }
                     break;
                 case "wget":
                     string url = words[1];
