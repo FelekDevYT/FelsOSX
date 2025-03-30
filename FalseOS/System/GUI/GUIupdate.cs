@@ -1,6 +1,5 @@
 ﻿using Cosmos.System.Graphics;
 using IL2CPU.API.Attribs;
-using OpenTerm;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FalseOS.System.FShell;
+using FalseOS.System.programs;
 
 namespace FalseOS.System.GUI
 {
@@ -19,8 +20,18 @@ namespace FalseOS.System.GUI
         [ManifestResourceStream(ResourceName = "FalseOS.assets.reboot.bmp")]
         private static byte[] rebootIcon;
 
+        [ManifestResourceStream(ResourceName = "FalseOS.assets.close.bmp")]
+        private static byte[] closeIcon;
+
 
         private static bool isMenuOpened = false;
+        private static bool isFenixReaderOpened = false;
+        private static bool isHTMLViewerOpened = true;
+
+        public static void start(Canvas c)
+        {
+            Kernel.canv = FullScreenCanvas.GetFullScreenCanvas(new Mode(1280, 720, ColorDepth.ColorDepth32));
+        }
         public static void update(Canvas canv)
         {
             canv.Clear(Color.Black);
@@ -38,6 +49,17 @@ namespace FalseOS.System.GUI
 
         private static void apps(Canvas canv)
         {
+            
+            if (isHTMLViewerOpened)
+            {
+                isHTMLViewerOpened = HTMLView.draw(canv,new Bitmap(closeIcon));
+            }
+
+            if (isFenixReaderOpened)
+            {
+                isFenixReaderOpened = !FenixReader.draw(canv, new Bitmap(closeIcon));
+            }
+
             if (isMenuOpened)
             {
                 canv.DrawFilledRectangle(Color.LightGoldenrodYellow,0,50,400,600);

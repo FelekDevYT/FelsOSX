@@ -45,7 +45,7 @@ namespace FalseOS.System.GUI
             _y = y;
             this.color = color;
             _text = text;
-            _width = text.Length * 7;
+            _width = text.Length * 8;
             _height = 15;
         }
 
@@ -53,12 +53,12 @@ namespace FalseOS.System.GUI
         {
             if (_text != null)
             {
-                if (mouseX >= _x && mouseX <= _x + _image.Width &&
-                    mouseY >= _y && mouseY <= _y + _image.Height &&
+                _canvas.DrawFilledRectangle(color, _x, _y, _width, _height);
+                _canvas.DrawString(_text, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Color.Black, _x + 2, _y + 2);
+                if (mouseX >= _x && mouseX <= _x + _width &&
+                    mouseY >= _y && mouseY <= _y + _height &&
                     MouseManager.MouseState == MouseState.Left)
                 {
-                    _canvas.DrawFilledRectangle(color, _x, _y, _width, _height);
-                    _canvas.DrawString(_text, Cosmos.System.Graphics.Fonts.PCScreenFont.Default, Color.Black, _x + 2, _y + 2);
                     return true;
                 }
                 else
@@ -67,15 +67,13 @@ namespace FalseOS.System.GUI
                 }
             } else if (_image != null)
             {
+                _canvas.DrawImageAlpha(_image, _x, _y);
                 if (mouseX >= _x && mouseX <= _x + _image.Width &&
                     mouseY >= _y && mouseY <= _y + _image.Height &&
                     MouseManager.MouseState == MouseState.Left)
                 {
-                    _canvas.DrawImageAlpha(_image, _x, _y);
                     return true;
                 }
-
-                _canvas.DrawImageAlpha(_image, _x, _y);
                 return false;
             }
             else

@@ -17,7 +17,10 @@ namespace FalseOS
 {
     public class Kernel : Sys.Kernel
     {
-        public static String ver = "0.0.0";
+        [ManifestResourceStream(ResourceName = "FalseOS.html.index.html")]
+        public static byte[] HTML;
+
+        public static String ver = "0.1.0";
         public static String Path = @"0:\";
         public static CosmosVFS fs;
 
@@ -42,7 +45,7 @@ namespace FalseOS
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Booting FelsOS " + ver);
             Console.ForegroundColor= ConsoleColor.White;
-
+            
             WriteMessage.writeInfo("End of booting FelsOS");
 
             try
@@ -53,6 +56,7 @@ namespace FalseOS
             {
 
             }
+            Console.WriteLine("\r\n\r\n  ______         _      _  __                    _ \r\n |  ____|       (_)    | |/ /                   | |\r\n | |__ ___ _ __  ___  _| ' / ___ _ __ _ __   ___| |\r\n |  __/ _ \\ '_ \\| \\ \\/ /  < / _ \\ '__| '_ \\ / _ \\ |\r\n | | |  __/ | | | |>  <| . \\  __/ |  | | | |  __/ |\r\n |_|  \\___|_| |_|_/_/\\_\\_|\\_\\___|_|  |_| |_|\\___|_|\r\n                                                   \r\n                                                   \r\n\r\n");
         }
 
 
@@ -79,8 +83,8 @@ namespace FalseOS
 
         protected override void AfterRun()
         {
-            Thread.Sleep(500);
             WriteMessage.writeInfo("Shutting down os...");
+            Thread.Sleep(500);
         }
     }
 }

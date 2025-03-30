@@ -3,18 +3,26 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FalseOS", "FalseOS\FalseOS.csproj", "{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FalseOS", "FalseOS\FalseOS.csproj", "{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM32 = Debug|ARM32
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|ARM32 = Release|ARM32
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}.Debug|ARM32.ActiveCfg = Debug|Any CPU
+		{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}.Release|ARM32.ActiveCfg = Release|Any CPU
+		{905F72EC-28C1-4E9F-987A-D03AB7CB2CCA}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

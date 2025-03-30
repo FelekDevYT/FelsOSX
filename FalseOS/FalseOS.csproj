@@ -6,6 +6,7 @@
         <Platform>cosmos</Platform>
         <SupportsX86Intrinsics>false</SupportsX86Intrinsics>
         <SelfContained>True</SelfContained>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -37,6 +38,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="assets\close.bmp" />
       <None Remove="assets\logo.bmp" />
       <None Remove="assets\reboot.bmp" />
       <None Remove="assets\shut.bmp" />
@@ -56,9 +58,13 @@
       <None Remove="fonts\7.F19" />
       <None Remove="fonts\8.F16" />
       <None Remove="fonts\9.F14" />
+      <None Remove="fonts\MonaSans-Bold.ttf" />
+      <None Remove="fonts\MonaSans-Regular.ttf" />
+      <None Remove="html\index.html" />
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="assets\close.bmp" />
       <EmbeddedResource Include="assets\logo.bmp" />
       <EmbeddedResource Include="assets\reboot.bmp" />
       <EmbeddedResource Include="assets\shut.bmp" />
@@ -78,9 +84,13 @@
       <EmbeddedResource Include="fonts\7.F19" />
       <EmbeddedResource Include="fonts\8.F16" />
       <EmbeddedResource Include="fonts\9.F14" />
+      <EmbeddedResource Include="fonts\MonaSans-Bold.ttf" />
+      <EmbeddedResource Include="fonts\MonaSans-Regular.ttf" />
+      <EmbeddedResource Include="html\index.html" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="com.Samma.forgium" Version="0.4.0" />
         <PackageReference Include="Cosmos.Build" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0-*" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.System2" Version="0-*" NoWarn="NU1604" />

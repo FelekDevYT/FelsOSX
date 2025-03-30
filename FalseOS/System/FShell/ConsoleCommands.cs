@@ -16,6 +16,7 @@ using Cosmos.System.Network.IPv4;
 using CosmosHttp.Client;
 using FalseOS.System.OSUtlis;
 using System.Numerics;
+using FalseOS.System.FShell;
 
 namespace FalseOS.System;
 
@@ -51,58 +52,23 @@ public class ConsoleCommands
             switch (words[0])
             {
                 case "bg":
-                    Cosmos.System.Global.Console.Background = (ConsoleColor) Int32.Parse(words[1]);
-                    Console.Clear();
+                    new bgCommand().Execute(command, words);
                     break;
                 case "vm":
-                    if (Cosmos.System.VMTools.IsVirtualBox)
-                    {
-                        WriteMessage.writeInfo("VirtualMachine is VBox");
-                    }else if (Cosmos.System.VMTools.IsQEMU)
-                    {
-                        WriteMessage.writeInfo("VirtualMachine is QEMU");
-                    }else if (Cosmos.System.VMTools.IsVMWare)
-                    {
-                        WriteMessage.writeInfo("VirtualMachine is VMware");
-                    }
+                    new vmCommand().Execute(command, words);
                     break;
                 case "gui":
-                    Kernel.canv = FullScreenCanvas.GetFullScreenCanvas(new Mode(1280, 720, ColorDepth.ColorDepth32));
-                    Cosmos.System.MouseManager.ScreenWidth = 1280;
-                    Cosmos.System.MouseManager.ScreenHeight = 720;
-                    Kernel.GUI = true;
+                    new guiCommand().Execute(command, words);
                     break;
                 case "info":
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    WriteMessage.writeLogo();
-                    Console.WriteLine(WriteMessage.centerText("FelsOS"));
-                    Console.WriteLine(WriteMessage.centerText(Kernel.ver));
-                    Console.WriteLine(WriteMessage.centerText("Created by FelekDevYT"));
-                    Console.WriteLine(WriteMessage.centerText("https://github.com/FelekDevYT/"));
-                    Console.ForegroundColor = ConsoleColor.White;
+                    new InfoCommand().Execute(command, words);
                     break;
                 case "free":
                     long free = Kernel.fs.GetAvailableFreeSpace(Kernel.Path);
                     Console.WriteLine("Free space: " + free / 1024 + "KB");
                     break;
                 case "ls":
-                    var Dirs = Directory.GetDirectories(Kernel.Path);
-                    var Files = Directory.GetFiles(Kernel.Path);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Directories (" + Dirs.Length + ")");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    for (int i = 0; i < Dirs.Length; i++)
-                    {
-                        Console.WriteLine(Dirs[i]);
-                    }
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Files (" + Files.Length + ")");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    for (int i = 0; i < Files.Length; i++)
-                    {
-                        Console.WriteLine(Files[i]);
-                    }
+                    new lsCommand().Execute(command, words);
                     break;
                 case "echo":
                     if (words.Length > 1)
@@ -131,288 +97,79 @@ public class ConsoleCommands
                     }
                     break;
                 case "cat":
-                    if (words.Length > 1)
-                    {
-                        String path = words[1];
-                        if (!path.Contains(@"\"))
-                            path = Kernel.Path + path;
-                        if (path.EndsWith(' '))
-                            path = path.Substring(0, path.Length - 1);
-                        String text = File.ReadAllText(path);
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.WriteLine(text);
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-                    else
-                    {
-                        WriteMessage.writeError("Indalid syntax");
-                    }
+                    new catCommand().Execute(command, words);
                     break;
                 case "rm":
-                    String FULL_PATH = Kernel.Path + words[1];
-                    if (File.Exists(FULL_PATH)) File.Delete(FULL_PATH);
-                    else if (Directory.Exists(FULL_PATH))
-                    {
-                        try
-                        {
-                            if (words[2] == "-r")
-                            {
-                                Directory.Delete(FULL_PATH, true);
-                                break;
-                            }
-                        }
-                        catch (Exception ex) { }
-                        Directory.Delete(FULL_PATH, false);
-                    }
-                    else
-                    {
-                        WriteMessage.writeError("Not found file or directory!");
-                    }
+                    new rmCommand().Execute(command, words);
                     break;
                 case "mkdir":
-                    if (words.Length > 1)
-                    {
-                        String path = words[1];
-                        if (!path.Contains(@"\"))
-                            path = Kernel.Path + path;
-                        if (path.EndsWith(' '))
-                        {
-                            path = path.Substring(0, path.Length - 1);
-                        }
-
-                        Directory.CreateDirectory(path);
-                        WriteMessage.writeOk("Directory " + path + " created!");
-                    }
-                    else
-                    {
-                        WriteMessage.writeError("Indalid syntax");
-                    }
+                    new mkdirCommand().Execute(command, words);
                     break;
                 case "":
                     //PASS
                     break;
                 case "mkfile":
-                    if (words.Length > 1)
-                    {
-                        String path = words[1];
-                        if (!path.Contains(@"\"))
-                            path = Kernel.Path + path;
-                        if (path.EndsWith(' '))
-                        {
-                            path = path.Substring(0, path.Length - 1);
-                        }
-
-                        File.Create(path);
-                        WriteMessage.writeOk("File " + path + " created!");
-                    }
-                    else
-                    {
-                        WriteMessage.writeError("Indalid syntax");
-                    }
+                    new mkfileCommand().Execute(command, words);
                     break;
                 case "cd":
-                    if (words.Length > 1)
-                    {
-                        if (words[1] == "*")
-                        {
-                            Kernel.Path = @"0:\";
-                        }
-                        if (words[1] == "..")
-                        {
-                            String tempPath = Kernel.Path.Substring(0, Kernel.Path.Length - 1);
-                            Kernel.Path = tempPath.Substring(0, tempPath.LastIndexOf(@"\"));
-                        }
-                        String path = words[1];
-                        if (!path.Contains(@"\"))
-                            path = Kernel.Path + path + @"\";
-                        if (path.EndsWith(' '))
-                        {
-                            path = path.Substring(0, path.Length - 1);
-                        }
-
-                        if (!(path.EndsWith(@"\")))
-                            path += @"\";
-                        if (Directory.Exists(path))
-                            Kernel.Path = path;
-                        else
-                            WriteMessage.writeError("Directory " + path + " not found!");
-                        WriteMessage.writeOk("Directory " + path + " created!");
-                    }
-                    else
-                    {
-                        WriteMessage.writeError("Indalid syntax");
-                    }
+                    new cdCommand().Execute(command, words);
                     break;
                 case "lua":
-                    try
-                    {
-                        int ai = 0;
-                        for (int i = 2; i < words.Length; i++)
-                        {
-                            args[ai] = words[i];
-                            ai++;
-                        }
-                        var lua = LuaAPI.NewState();
-                        lua.L_OpenLibs();
-                        lua.L_DoString(File.ReadAllText(Kernel.Path + words[1]));
-                    }
-                    catch (Exception e)
-                    {
-                        WriteMessage.writeError(e.Message);
-                    }
+                    new luaCommand().Execute(command, words);
                     break;
                 case "clear":
-                    Console.Clear();
+                    new clearCommand().Execute(command, words);
                     break;
                 case "shutdown":
-                    Cosmos.System.Power.Shutdown();
+                    new  shutdownCommand().Execute(command, words);
                     break;
                 case "reboot":
-                    Cosmos.System.Power.Reboot();
+                    new rebootCommand().Execute(command, words);
                     break;
                 case "edit":
-                    Editor.edit(Kernel.Path + words[1]);
+                    new editCommand().Execute(command, words);
                     break;
                 case "notepad":
-                    Notepad.run();
+                    new notepadCommand().Execute(command, words);
                     break;
                 case "calc":
-                    String expression = "";
-                    for (int i = 1; i < words.Length; i++)
-                    {
-                        expression += words[i];
-                    }
-                    var luaAPI = LuaAPI.NewState();
-                    luaAPI.L_OpenLibs();
-                    luaAPI.L_DoString("print(" + expression + ")");
+                    new calcCommand().Execute(command, words);
                     break;
                 case "luadebugger":
-                    //debug your code
-                    while (true)
-                    {
-                        Console.Write("LUA debugger$ ");
-                        var state = Console.ReadLine();
-                        if (state == "$%")
-                        {
-                            break;
-                        }
-                        var luastate = LuaAPI.NewState();
-                        luastate.L_OpenLibs();
-                        luastate.L_DoString(state);
-                    }
+                    new luaDebuggerCommand().Execute(command, words);
                     break;
                 case "set-font":
-                    FontManager.parseAndSetFont(words[1]);
+                    new setfontCommand().Execute(command, words);
                     break;
                 case "fetch":
-                    Console.WriteLine($"" +
-                        $"\t\t   ##,\r\n\t\t(##/#/((\r\n\t  ,#////(((((/\r\n\t  /*/*//##(*/*,\r\n   ,***/##*,**((( //*\r\n  ,* ,**/,    ,.*/* **,\r\n   *,*(,,,,*/***//*,/,\r\n\t .*,/,.,*((,,,/\r\n\t\t*/,,*/,*\r\n\t\t ,,/*/*\r\n\t\t\t*");
+                    new fetchCommand().Execute(command, words);
                     break;
                 case "sysinfo":
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine("CPU: {0}\nCPU vendor: {1}\n" +
-                        "amoundOfRAM: {2}\navailiableRAM: {3}\n" +
-                        "usedRAM: {4}",
-                        Cosmos.Core.CPU.GetCPUBrandString(),
-                        Cosmos.Core.CPU.GetCPUVendorName(),
-                        Cosmos.Core.CPU.GetAmountOfRAM(),
-                        Cosmos.Core.GCImplementation.GetAvailableRAM(),
-                        Cosmos.Core.GCImplementation.GetUsedRAM());
-                    Console.ForegroundColor = ConsoleColor.White;
+                    new sysInfoCommand().Execute(command, words);
                     break;
                 case "cputest":
-                    ulong cpuUptime = Cosmos.Core.CPU.GetCPUUptime();
-                    WriteMessage.writeInfo("Starting tests");
-                    Thread.Sleep(1000);
-                    ulong afterCpuUptime = Cosmos.Core.CPU.GetCPUUptime();
-                    WriteMessage.writeOk("Ending CPUUptime tests");
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine((double)(afterCpuUptime - cpuUptime) / 1000000000);
-                    Console.ForegroundColor = ConsoleColor.White;
+                    new cpuTestCommand().Execute(command, words);
                     break;
                 case "diskmanager":
-                    switch (words[1])
-                    {
-                        case "--list":
-                        case "-l":
-                            if (Kernel.fs.Disks.Count == 0)
-                            {
-                                WriteMessage.writeError("No disks found!");
-                            }
-                            for (int disk = 0; disk < Kernel.fs.Disks.Count; disk++)
-                            {
-                                Console.Write($"Disk {disk}");
-                                Console.Write(new string(' ', 20 - $"Disk {disk}".Length));
-                                Console.Write($"Size: {Kernel.fs.Disks[disk].Size / (1024 * 1024)}MiB");
-                                Console.Write(new string(' ', 20 - $"Size: {Kernel.fs.Disks[disk].Size / (1024 * 1024)} MiB".Length));
-                                Console.Write($"Partitions: {Kernel.fs.Disks[disk].Partitions.Count}");
-                                Console.Write(new string(' ', 20 - $"Partitions: {Kernel.fs.Disks[disk].Partitions.Count}".Length));
-
-                                if (Kernel.fs.Disks[disk].IsMBR)
-                                    Console.Write($"MBR");
-                                else
-                                    Console.Write($"GPT");
-                                Console.WriteLine();
-                            }
-                            break;
-                    }
+                    new diskmanagerCommand().Execute(command, words);
                     break;
                 case "format":
-                    if (Kernel.fs.Disks[0].Partitions.Count > 0)
-                    {
-                        Kernel.fs.Disks[0].DeletePartition(0);
-                    }
-                    Kernel.fs.Disks[0].Clear();
-                    Kernel.fs.Disks[0].CreatePartition((int)(Kernel.fs.Disks[0].Size / (1024 * 1024)));
-                    Kernel.fs.Disks[0].FormatPartition(0, "FAT32", true);
-                    WriteMessage.writeOk("Success format!");
-                    WriteMessage.writeWarning("FelsOS will be reboot in 3 seconds...");
-                    Thread.Sleep(3000);
-                    Cosmos.System.Power.Reboot();
-                    break;
-                case "setsize":
-                    Console.SetWindowSize(80, 25);
+                    new formatCommand().Execute(command, words);
                     break;
                 case "flc"://fcl[0] test.l[1] -o[2] test.app[3]
-                    switch (words[2])
-                    {
-                        case "-o":
-                            String src = File.ReadAllText(Kernel.Path + words[1]);
-                            String esrc = new SimpleCipher(92489945).Encrypt(src);
-                            File.WriteAllText(Kernel.Path + words[3],esrc);
-                            break;
-                        default:
-                            WriteMessage.writeError("Usage: flc --help or fcl -h for get command list!");
-                            break;
-                    }
+                    new flcCommand().Execute(command, words);
                     break;
                 case "run":
-                    try
-                    {
-                        String src = File.ReadAllText(Kernel.Path + words[1]);
-                        String dsrc = new SimpleCipher(92489945).Decrypt(src);
-                        var lua = LuaAPI.NewState();
-                        lua.L_OpenLibs();
-                        lua.L_DoString(dsrc);
-                    }
-                    catch(Exception exc)
-                    {
-                        WriteMessage.writeError(exc.ToString());
-                    }
+                    new runCommand().Execute(command, words);
                     break;
                 case "wget":
-                    string url = words[1];
-
-                    try
-                    {
-                        string file = HttpHandler.downloadFile(url);
-                        File.WriteAllText(Kernel.Path + "file", file);
-                        WriteMessage.writeOk("URL contains saved to file");
-                    }
-                    catch (Exception ex)
-                    {
-                        WriteMessage.writeError(ex.ToString());
-                    }
+                    new wgetCommand().Execute(command, words);
+                    break;
+                case "tl":
+                    new thCommand().Execute("",words);
+                    break;
+                case "fass":
+                    new fassCommand().Execute("", args);
                     break;
                 default:
                     if (command.StartsWith("./"))
